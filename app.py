@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from neural_network import NeuralNetwork
+from nn import procesar_data
 
 
 from preprocesamiento_data import sacar_espectrograma, normalizar, binarizar, obtener_dataframe
@@ -45,7 +47,8 @@ def process_audio():
         print(df_unido)
         df_unido.to_csv('./data/cancion.csv', index=False)
 
-        return jsonify("OK"), 200
+        porcentaje = procesar_data('./data/cancion.csv')
+        return jsonify(porcentaje), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
