@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import Binarizer
 
-def sacar_espectrograma(audio_path, etiqueta):
-    y, sr = librosa.load(audio_path) # carga el audio y la tasa de muestreo, y: longitud de audio forma de onda , sr: tasa de muestreo
+def sacar_espectrograma(audio, etiqueta):
+    y, sr = librosa.load(audio) # carga el audio y la tasa de muestreo, y: longitud de audio forma de onda , sr: tasa de muestreo
     
     # Tomar los primeros 60 segundos de la señal de audio
     objetivo_duration = 60  #se establece duracion de 60 segundos
@@ -30,21 +30,19 @@ def sacar_espectrograma(audio_path, etiqueta):
     return  espectrograma
 
 def normalizar(cancion):
- 
- # Seleccionar todas las columnas excepto la última
-  X = cancion.iloc[:, :-1]
-  # Escalador Min-Max
-  scaler = MinMaxScaler(feature_range=(0, 1))
-  # Normalizar los datos
-  X_norm = scaler.fit_transform(X)
-  # Concatenar las columnas normalizadas con la última columna
-  cancion_norm = np.concatenate((X_norm, cancion.iloc[:, -1].values.reshape(-1, 1)), axis=1)
-  return cancion_norm
+    # Seleccionar todas las columnas excepto la última
+    X = cancion.iloc[:, :-1]
+    # Escalador Min-Max
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    # Normalizar los datos
+    X_norm = scaler.fit_transform(X)
+    # Concatenar las columnas normalizadas con la última columna
+    cancion_norm = np.concatenate((X_norm, cancion.iloc[:, -1].values.reshape(-1, 1)), axis=1)
+    return cancion_norm
 
 
 #binarizar
 def binarizar(cancion, umbral):
-
     cancion=pd.DataFrame(cancion)
     # Seleccionar todas las columnas excepto la última
     X = cancion.iloc[:, :-1].astype('float')
@@ -54,3 +52,6 @@ def binarizar(cancion, umbral):
     # Concatenar las columnas binarizadas con la última columna
     cancion_bin = np.concatenate((X_bin, cancion.iloc[:, -1].values.reshape(-1, 1)), axis=1)
     return cancion_bin
+
+def obtener_dataframe(data):
+    return pd.DataFrame(data)
